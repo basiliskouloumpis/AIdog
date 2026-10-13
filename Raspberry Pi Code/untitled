@@ -1,0 +1,28 @@
+import subprocess
+
+PORT = "/dev/ttyACM0"  # change if yours is different
+
+def run_on_xrp(code):
+    """Send a snippet of Python to run directly on the XRP."""
+    result = subprocess.run(
+        ["mpremote", "connect", PORT, "exec", code],
+        capture_output=True, text=True
+    )
+    if result.returncode != 0:
+        print("Error:", result.stderr)
+    return result.stdout
+
+def set_servo_angle(angle):
+    run_on_xrp(f"from XRPLib.defaults import *; servo_one.set_angle({angle})")
+
+# --- Example usage ---
+import time
+
+set_servo_angle(0)
+time.sleep(1)
+
+set_servo_angle(90)
+time.sleep(1)
+
+set_servo_angle(180)
+time.sleep(1)
